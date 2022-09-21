@@ -18,6 +18,19 @@
     white-space: nowrap;
     word-wrap: normal;
     direction: ltr;
-    -webkit-font-feature-settings: 'liga';
     -webkit-font-smoothing: antialiased;
   }
+
+  #searchbtn{
+    padding: 6px 5px 0px 5px;
+
+}
+
+.searcharea {
+    background-color: #4488c8;
+    padding: 20px;
+}
+
+.navbar-brand{
+    font-size: 30px;
+}
