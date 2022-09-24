@@ -117,8 +117,6 @@ var showWeather = function(weatherData) {
     // event handlers
 $("#search-form").submit(searchSubmitHandler);
 $("#search-history").on("click", function(event){
-    // get the links id value
-    var prevCity = $(event.target).closest("a").attr("id");
-    // pass it's id value to the getCityWeather function
-    getCityWeather(prevCity);
+
+    getCityWeather();
 });
