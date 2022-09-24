@@ -108,6 +108,7 @@ var showWeather = function(weatherData) {
            }
         })
     });
+    console.log("5 day api call", fetch)
     };
 
 
