@@ -105,7 +105,23 @@ var saveSearchHistory = function (city) {
 
     // display the searchHistory array
     loadSearchHistory();
-}
+};
+// function to load saved city search history from local storage
+var loadSearchHistory = function() {
+    searchHistory = JSON.parse(localStorage.getItem("weatherSearchHistory"));
+    lastCitySearched = JSON.parse(localStorage.getItem("lastCitySearched"));
+
+    // clear any previous values from th search-history ul
+    $("#search-history").empty();
+
+    // for loop that will run through all the citys found in the array
+     for(i = 0 ; i < searchHistory.length ;i++) 
+    {
+
+        // add the city as a link, set it's id, and append it to the search-history ul
+        $("#search-history").append("<a href='#' class='list-group-item list-group-item-action' id='" + searchHistory[i] + "'>" + searchHistory[i] + "</a>");
+    }
+  };
 
 
 
