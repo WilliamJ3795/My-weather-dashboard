@@ -44,4 +44,4 @@ OpenWeather API
 The following image shows the web application's appearance and functionality:
 
 
-![](Assets\weatherdashboardgif.gif)
+![](weatherdashboardgif.gif)
