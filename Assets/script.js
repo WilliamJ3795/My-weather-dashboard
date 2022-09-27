@@ -2,11 +2,10 @@
 var searchHistory = []
 var lastCitySearched = ""
 
-// api call to openweathermap.org
-var getCityWeather = function(city) {
+var collectCityData = function(city) {
     
     // declare the OpenWeather api url
-    var apiUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=ce39e7239416ad754359ca762d28521a&units=imperial";
+    var apiUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=ce39e7239416ad754359ca762d28521a&units=imperial"
      // request call to api
      fetch(apiUrl)
      .then(function(response) {
@@ -25,8 +24,9 @@ var getCityWeather = function(city) {
      .catch(function(error) {
          alert("Unable to connect to OpenWeather");
      })
+     console.log("api is called", collectCityData);
 };
-console.log("api is called", getCityWeather);
+
 
 
 // function to handle search button
@@ -39,7 +39,7 @@ var searchSubmitHandler = function(event) {
     // check if the search field has a value
     if(cityName) {
         // pass the value to getCityWeather function
-        getCityWeather(cityName);
+        collectCityData(cityName);
 
         // clear the search input
         $("#city-name").val("");
@@ -80,43 +80,41 @@ var showWeather = function(weatherData) {
        });
        console.log("this function works", showWeather)
 
-       // 5 day api call
-    fetch("https://api.openweathermap.org/data/2.5/forecast?q=" + weatherData.name + "&appid=ce39e7239416ad754359ca762d28521a&units=imperial")
-    .then(function(response) {
-        response.json().then(function(data) {
 
-            // clear any previous entries in the 5-day forecast
-            $("#five-day").empty();
+   // save the last city searched
+   lastCitySearched = weatherData.name;
 
-            // get every 8th value (24hours) in the returned array from the api call
-            for(i = 7; i <= data.list.length; i += 8){
+   // save to the search history using the api's name value
+   // this also keeps searches that did not return a result from populating the array
+   saveSearchHistory(weatherData.name);
 
-                // insert data into my card forecast
-                var fiveDayCard =`
-                <div class="col-md-2 m-2 py-3 card text-white bg-primary">
-                    <div class="card-body p-1">
-                        <h5 class="card-title">` + dayjs(data.list[i].dt * 1000).format("MM/DD/YYYY") + `</h5>
-                        <img src="https://openweathermap.org/img/wn/` + data.list[i].weather[0].icon + `.png" alt="rain">
-                        <p class="card-text">Temp: ` + data.list[i].main.temp + `</p>
-                        <p class="card-text">Humidity: ` + data.list[i].main.humidity + `</p>
-                    </div>
-                </div>
-                `;
+   
+};
+// function to save the city search history to local storage
+var saveSearchHistory = function (city) {
+    if(!searchHistory.includes(city)){
+        searchHistory.push(city);
+        $("#search-history").append("<a href='#' class='list-group-item list-group-item-action' id='" + city + "'>" + city + "</a>")
+    } 
 
-                // append the day to the 5-day forecast
-                $("#five-day").append(fiveDayCard);
-           }
-        })
-    });
-    console.log("5 day api call", fetch)
-    };
+    // save the searchHistory array to local storage
+    localStorage.setItem("weatherSearchHistory", JSON.stringify(searchHistory));
+
+    // save the lastCitySearched to local storage
+    localStorage.setItem("lastCitySearched", JSON.stringify(lastCitySearched));
+
+    // display the searchHistory array
+    loadSearchHistory();
+}
 
 
 
 
-    // event handlers
+ // event handlers
 $("#search-form").submit(searchSubmitHandler);
 $("#search-history").on("click", function(event){
-
-    getCityWeather();
+    // get the links id value
+    let prevCity = $(event.target).closest("a").attr("id");
+    // pass it's id value to the getCityWeather function
+   collectCityData(prevCity);
 });
